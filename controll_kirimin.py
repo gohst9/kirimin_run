@@ -1,5 +1,5 @@
+#このプログラムを動かすにはpyxelをインストールする必要があります。
 import pyxel
-import sympy
 
 WIDTH  = 160
 HEIGHT = 120
