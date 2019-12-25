@@ -1,5 +1,6 @@
 #このプログラムを動かすにはpyxelをインストールする必要があります。
 import pyxel
+import math
 
 WIDTH  = 160
 HEIGHT = 120
@@ -19,20 +20,21 @@ class Bullet:
         self.dx = dx
         self.dy = dy
     def update(self):
-        self.x += self.dx
-        self.y += self.dy
+        self.x = self.x + self.dx
+        self.y = self.y + self.dy
         #画面端で反転する
         if self.x < 0 or self.x > WIDTH:
             self.dx = -self.dx
         if self.y < 0 or self.y > HEIGHT:
             self.dy = -self.dy
     def draw(self):
-        pyxel.pix(self.x,self.y,10)
+        pyxel.pix(round(self.x),round(self.y),10)
 
 
 class App:
     def __init__(self):
         pyxel.init(WIDTH,HEIGHT,caption="Kirimin Run!")
+        pyxel.mouse(True)
         pyxel.load("my_resource.pyxres")
         self.kirimin_x,self.kirimin_y = 0,0 #きりみんちゃんの位置
         self.kirimin_move = False #きりみんちゃんが動いているか否か　アニメーションに影響
@@ -106,8 +108,13 @@ class App:
         pyxel.text(x,y,"AC!",11)
 
     def shoot(self):
-        dx = -1 if self.left else 1
-        dy = 0 if not(self.up or self.down) else 1 * self.down + -1 * self.up
+        x = pyxel.mouse_x
+        y = pyxel.mouse_y
+        dx = x - self.kirimin_x
+        dy = y - self.kirimin_y
+        dist = math.sqrt(dx ** 2 + dy ** 2)
+        dx = dx / dist
+        dy = dy / dist
         self.bullet_lst.append(Bullet(self.kirimin_x,self.kirimin_y,dx,dy))
 
 App()
